@@ -1,0 +1,65 @@
+package com.frn.dependencyinjectionhilt.presentation
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.frn.dependencyinjectionhilt.data.Database
+import com.frn.dependencyinjectionhilt.data.ExampleRepositoryImpl
+import com.frn.dependencyinjectionhilt.domain.ExampleUseCase
+import com.frn.dependencyinjectionhilt.presentation.ui.theme.DependencyInjectionHiltTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val database = Database()
+        val exampleRepository = ExampleRepositoryImpl(database)
+        val exampleUseCase = ExampleUseCase(exampleRepository)
+
+        enableEdgeToEdge()
+        setContent {
+            DependencyInjectionHiltTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    ExampleScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel{
+                            ExampleViewModel(
+                                exampleUseCase
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ExampleScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ExampleViewModel
+) {
+
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Button(onClick = {
+            viewModel.exampleMethod()
+        }) {
+            Text("Click Me")
+        }
+    }
+
+}

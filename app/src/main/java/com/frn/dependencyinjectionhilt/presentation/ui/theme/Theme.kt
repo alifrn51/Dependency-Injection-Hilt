@@ -1,4 +1,4 @@
-package com.frn.dependencyinjectionhilt.ui.theme
+package com.frn.dependencyinjectionhilt.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
