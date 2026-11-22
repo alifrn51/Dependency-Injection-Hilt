@@ -14,18 +14,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.frn.dependencyinjectionhilt.data.Database
-import com.frn.dependencyinjectionhilt.data.ExampleRepositoryImpl
-import com.frn.dependencyinjectionhilt.domain.ExampleUseCase
+import com.frn.dependencyinjectionhilt.di.Component
 import com.frn.dependencyinjectionhilt.presentation.ui.theme.DependencyInjectionHiltTheme
 
 class MainActivity : ComponentActivity() {
+
+    lateinit var exampleViewModel: ExampleViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val database = Database()
-        val exampleRepository = ExampleRepositoryImpl(database)
-        val exampleUseCase = ExampleUseCase(exampleRepository)
+        val component = Component()
+        component.inject(this)
 
         enableEdgeToEdge()
         setContent {
@@ -33,10 +33,8 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ExampleScreen(
                         modifier = Modifier.padding(innerPadding),
-                        viewModel = viewModel{
-                            ExampleViewModel(
-                                exampleUseCase
-                            )
+                        viewModel = viewModel {
+                            exampleViewModel
                         }
                     )
                 }
